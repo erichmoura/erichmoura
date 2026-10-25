@@ -2448,6 +2448,23 @@
     openModals.forEach(function (m) {
       m.classList.remove('is-open');
       m.setAttribute('aria-hidden', 'true');
+
+      // Pausa a reprodução de áudio e vídeo ao fechar a modal
+      m.querySelectorAll('iframe').forEach(function (frame) {
+        const currentSrc = frame.getAttribute('src');
+        if (currentSrc) {
+          frame.setAttribute('src', currentSrc);
+        }
+      });
+
+      // Se a modal de cinema for fechada, restaura o poster e encerra o player
+      const cinemaContainer = m.querySelector('#cinemaIframeContainer');
+      const cinemaFacade = m.querySelector('#cinemaPosterFacade');
+      if (cinemaContainer && cinemaFacade) {
+        cinemaContainer.innerHTML = '';
+        cinemaContainer.style.display = 'none';
+        cinemaFacade.style.display = 'flex';
+      }
     });
 
     gameState.isModalOpen = false;
@@ -2581,6 +2598,40 @@
     const items = essayList.querySelectorAll('.essay-slot');
     let currentDateMode = 'range'; // 'range' | 'single'
 
+    // Popula dinamicamente as opções do filtro de modalidades a partir dos ensaios cadastrados
+    if (catSelect) {
+      catSelect.innerHTML = '<option value="all">Todas as modalidades</option>';
+      const categoriesMap = new Map();
+
+      items.forEach(function (slot) {
+        const rawCat = slot.getAttribute('data-category');
+        if (!rawCat) return;
+        const catKey = rawCat.trim().toLowerCase();
+        if (!categoriesMap.has(catKey)) {
+          const badge = slot.querySelector('.essay-slot__badge');
+          let catLabel = rawCat.trim();
+          if (badge) {
+            const parts = badge.textContent.split('•');
+            if (parts.length > 1) {
+              catLabel = parts[parts.length - 1].trim();
+            } else {
+              catLabel = badge.textContent.trim();
+            }
+          }
+          if (catLabel) {
+            categoriesMap.set(catKey, catLabel);
+          }
+        }
+      });
+
+      categoriesMap.forEach(function (label, key) {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = label;
+        catSelect.appendChild(opt);
+      });
+    }
+
     function applyFilters() {
       const q = (searchInput && searchInput.value) ? searchInput.value.trim().toLowerCase() : '';
       const cat = catSelect ? catSelect.value : 'all';
@@ -2593,7 +2644,7 @@
 
       items.forEach(function (slot) {
         const itemTitle = (slot.getAttribute('data-title') || '').toLowerCase();
-        const itemCat = slot.getAttribute('data-category') || '';
+        const itemCat = (slot.getAttribute('data-category') || '').trim().toLowerCase();
         const itemDate = slot.getAttribute('data-date') || ''; // Formato ISO YYYY-MM-DD
         const itemSearch = (slot.getAttribute('data-search') || slot.textContent || '').toLowerCase();
 
@@ -2628,7 +2679,16 @@
       });
 
       if (emptyNotice) {
-        emptyNotice.style.display = visibleCount === 0 ? 'block' : 'none';
+        const noticeText = emptyNotice.querySelector('.essays-empty-state__text');
+        if (items.length === 0) {
+          emptyNotice.style.display = 'block';
+          if (noticeText) noticeText.textContent = 'Nenhum ensaio publicado ainda. Novos textos em breve!';
+        } else if (visibleCount === 0) {
+          emptyNotice.style.display = 'block';
+          if (noticeText) noticeText.textContent = 'Nenhum ensaio encontrado para os filtros selecionados.';
+        } else {
+          emptyNotice.style.display = 'none';
+        }
       }
     }
 
@@ -2688,10 +2748,55 @@
         applyFilters();
       });
     }
+
+    // Aplica o filtro inicial ao carregar
+    applyFilters();
+  }
+
+  function initCinemaPlayer() {
+    const wrapper = document.getElementById('cinemaScreenWrapper');
+    const facade = document.getElementById('cinemaPosterFacade');
+    const playBtn = document.getElementById('cinemaPlayBtn');
+    const container = document.getElementById('cinemaIframeContainer');
+    if (!wrapper || !facade || !playBtn || !container) return;
+
+    const videoId = wrapper.getAttribute('data-video-id');
+    const isLocalFile = window.location.protocol === 'file:';
+
+    function startPlayback() {
+      if (isLocalFile) {
+        // No protocolo file:// local, navegadores bloqueiam o cabeçalho Referer,
+        // o que faz o YouTube rejeitar o embed com o Erro 153.
+        // Abrimos diretamente o YouTube em nova aba para uma reprodução perfeita.
+        window.open('https://youtu.be/' + videoId, '_blank', 'noopener,noreferrer');
+      } else {
+        // Em ambiente web (GitHub Pages / servidor HTTP / HTTPS), injeta o player diretamente na tela
+        facade.style.display = 'none';
+        container.style.display = 'block';
+        container.innerHTML =
+          '<iframe class="cinema-iframe" ' +
+          'src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0" ' +
+          'title="Uma casa para Cinderela | Romance K-drama Completo" ' +
+          'frameborder="0" ' +
+          'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ' +
+          'referrerpolicy="strict-origin-when-cross-origin" ' +
+          'allowfullscreen></iframe>';
+      }
+    }
+
+    playBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      startPlayback();
+    });
+
+    facade.addEventListener('click', function () {
+      startPlayback();
+    });
   }
 
   function initModalsAndHud() {
     initEssayFilters();
+    initCinemaPlayer();
 
     document.querySelectorAll('.modal-backdrop').forEach(function (backdrop) {
       backdrop.addEventListener('click', function (event) {

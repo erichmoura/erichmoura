@@ -592,7 +592,93 @@ body.is-touch-device .touch-dpad {
   background: var(--text-secondary);
 }
 
-/* Modal 1: Grid de Postagens / Vídeos */
+/* Modal 1: Grid de Músicas & Players Spotify */
+.music-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: var(--space-md);
+}
+
+.music-card {
+  background-color: rgba(185, 185, 185, 0.03);
+  border: 1px solid rgba(185, 185, 185, 0.25);
+  border-radius: 0;
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.music-card:hover {
+  border-color: var(--accent);
+  background-color: rgba(134, 221, 143, 0.03);
+}
+
+.music-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.music-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.music-card__badge {
+  font-family: var(--font-game);
+  font-size: 0.5625rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+.music-card__title {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.music-card__spotify-link {
+  font-family: var(--font-game);
+  font-size: 0.5625rem;
+  color: var(--surface);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 4px 6px;
+  border: 1px solid rgba(185, 185, 185, 0.25);
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.music-card__spotify-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.music-card__player {
+  width: 100%;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.spotify-iframe {
+  display: block;
+  width: 100%;
+  border: 1px solid rgba(185, 185, 185, 0.2);
+  border-radius: 0 !important;
+  background-color: var(--bg-primary);
+}
+
+/* Modal 1: Grid legado de Postagens / Vídeos */
 .posts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -862,11 +948,26 @@ body.is-touch-device .touch-dpad {
 
 .bio-modal__lead {
   font-family: var(--font-display);
-  font-size: 1.625rem;
-  line-height: 1.4;
+  font-size: 1.45rem;
+  line-height: 1.6;
   color: var(--text-primary);
   font-style: italic;
   margin: 0;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bio-modal__link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.bio-modal__link:hover {
+  color: var(--text-primary);
 }
 
 .essay-slot__badge {
@@ -932,6 +1033,20 @@ body.is-touch-device .touch-dpad {
   background-color: rgba(185, 185, 185, 0.25);
 }
 
+.essay-slot__title {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.25;
+  transition: color var(--transition-fast);
+}
+
+.essay-slot:hover .essay-slot__title {
+  color: var(--accent);
+}
+
 .essay-slot__arrow {
   font-family: var(--font-game);
   font-size: 0.75rem;
@@ -948,6 +1063,109 @@ body.is-touch-device .touch-dpad {
   width: 35%;
   margin-top: var(--space-xs);
   background-color: rgba(185, 185, 185, 0.12);
+}
+
+.essay-slot__meta {
+  margin-top: var(--space-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+/* Cards Reais de Mídia (Músicas e Cinema) */
+.media-card {
+  background-color: rgba(185, 185, 185, 0.04);
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  text-decoration: none;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.media-card:hover {
+  border-color: var(--accent);
+  background-color: rgba(134, 221, 143, 0.05);
+  transform: translateY(-2px);
+}
+
+.media-card__thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(185, 185, 185, 0.25);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.media-card__play-icon {
+  position: absolute;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  background: rgba(43, 42, 42, 0.85);
+  border: 1px solid var(--surface);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.media-card:hover .media-card__play-icon {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.media-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding-top: var(--space-2xs);
+}
+
+.media-card__title {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.2;
+  transition: color var(--transition-fast);
+}
+
+.media-card:hover .media-card__title {
+  color: var(--accent);
+}
+
+.media-card__meta {
+  font-family: var(--font-game);
+  font-size: 0.5625rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+.media-card__desc {
+  font-family: var(--font-reading);
+  font-size: 0.75rem;
+  color: var(--surface);
+  line-height: 1.4;
+  margin: 0;
 }
 
 /* Modal 3: Grid da Sala de Cinema */
@@ -1011,6 +1229,183 @@ body.is-touch-device .touch-dpad {
 
 .cinema-card-slot__line--sub {
   width: 50%;
+}
+
+/* Modal 3: Showcase de Filmes & Player YouTube */
+.cinema-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.cinema-featured {
+  background-color: rgba(185, 185, 185, 0.03);
+  border: 1px solid rgba(185, 185, 185, 0.25);
+  border-radius: 0;
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.cinema-featured:hover {
+  border-color: var(--accent);
+  background-color: rgba(134, 221, 143, 0.03);
+}
+
+.cinema-screen-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #000;
+  border: 1px solid rgba(185, 185, 185, 0.35);
+  overflow: hidden;
+}
+
+.cinema-poster-facade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cinema-poster-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-fast), filter var(--transition-fast);
+  filter: brightness(0.8);
+}
+
+.cinema-poster-facade:hover .cinema-poster-img {
+  transform: scale(1.02);
+  filter: brightness(0.95);
+}
+
+.cinema-play-overlay {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  background-color: rgba(43, 42, 42, 0.9);
+  border: 1px solid var(--accent);
+  color: var(--text-primary);
+  font-family: var(--font-game);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.cinema-poster-facade:hover .cinema-play-overlay,
+.cinema-play-overlay:hover {
+  background-color: var(--accent);
+  color: var(--bg-primary);
+  transform: scale(1.05);
+}
+
+.cinema-play-symbol {
+  font-size: 0.875rem;
+  line-height: 1;
+}
+
+.cinema-play-text {
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
+}
+
+.cinema-iframe-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cinema-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.cinema-featured__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.cinema-featured__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.cinema-featured__titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.cinema-featured__badge {
+  display: inline-block;
+  font-family: var(--font-game);
+  font-size: 0.5625rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+.cinema-featured__title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.cinema-featured__yt-link {
+  font-family: var(--font-game);
+  font-size: 0.5625rem;
+  color: var(--surface);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 6px 10px;
+  border: 1px solid rgba(185, 185, 185, 0.25);
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.cinema-featured__yt-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.cinema-featured__desc {
+  font-family: var(--font-reading);
+  font-size: 0.8125rem;
+  color: var(--surface);
+  margin: 0;
+  line-height: 1.5;
 }
 
 /* Modal 4: Boas-Vindas */
