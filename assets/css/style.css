@@ -1,0 +1,890 @@
+/* ==========================================================================
+   Importação de Tipografias (Google Fonts)
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Press+Start+2P&display=swap');
+
+/* ==========================================================================
+   Tokens CSS (:root) - Brand Guideline
+   ========================================================================== */
+:root {
+  /* Paleta Oficial do Projeto */
+  --bg-primary: #2b2a2a;
+  --mono-dark: #555555;
+  --surface: #b9b9b9;
+  --text-primary: #fafafa;
+  --text-secondary: #d5d5d5;
+  --accent: #86dd8f;
+
+  /* Tipografia */
+  --font-game: 'Press Start 2P', monospace;
+  --font-heading: 'Instrument Serif', serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Espaçamentos */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+
+  /* Transições */
+  --transition-fast: 120ms ease-out;
+  --transition-progress: 120ms ease-out;
+  --transition-fade: 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ==========================================================================
+   Reset Padrão & Base
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+}
+
+/* ==========================================================================
+   Palco Principal & Enquadramento Central do Jogo (Desktop / Mobile)
+   ========================================================================== */
+.stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  padding: var(--space-md);
+}
+
+.game-frame {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#gameCanvas {
+  display: block;
+  max-width: 680px;
+  aspect-ratio: 17 / 11;
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(0, 0, 0, 0.4);
+  background-color: var(--bg-primary);
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 768px) {
+  #gameCanvas {
+    max-width: 100%;
+    border: 1px solid rgba(185, 185, 185, 0.35);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* ==========================================================================
+   Menu Alternativo de Acessibilidade / Acesso Rápido (Mobile & Desktop)
+   ========================================================================== */
+.quick-nav {
+  position: fixed;
+  top: 1rem;
+  right: 1.25rem;
+  z-index: 65;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quick-nav__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.65rem;
+  background-color: rgba(43, 42, 42, 0.88);
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  color: var(--text-primary);
+  font-family: var(--font-game);
+  font-size: 0.65rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  outline: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.quick-nav__btn:hover,
+.quick-nav__btn:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: rgba(43, 42, 42, 0.98);
+}
+
+.quick-nav__btn:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 768px) {
+  .quick-nav {
+    top: 0.75rem;
+    right: 0.75rem;
+    gap: 0.35rem;
+  }
+
+  .quick-nav__btn {
+    font-size: 0.5625rem;
+    padding: 0.4rem 0.5rem;
+  }
+}
+
+/* ==========================================================================
+   HUD de Interação (Desktop) & Botão de Ação (Mobile)
+   ========================================================================== */
+.interaction-hud {
+  position: absolute;
+  bottom: 0.85rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.45rem 0.8rem;
+  background-color: rgba(43, 42, 42, 0.9);
+  border: 1px solid var(--accent);
+  border-radius: 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  font-family: var(--font-game);
+  font-size: 0.6875rem;
+  color: var(--accent);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast),
+    visibility var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.interaction-hud.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.interaction-hud:hover {
+  background-color: rgba(134, 221, 143, 0.16);
+}
+
+.interaction-hud__badge {
+  color: var(--text-primary);
+}
+
+.interaction-hud__text {
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 768px), (pointer: coarse) {
+  .interaction-hud {
+    display: none !important;
+  }
+}
+
+.mobile-action-btn {
+  position: fixed;
+  bottom: 1.75rem;
+  right: 1.75rem;
+  z-index: 60;
+  display: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(43, 42, 42, 0.9);
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--font-game);
+  font-size: 0.875rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  outline: none;
+  touch-action: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.85);
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast),
+    visibility var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+@media (max-width: 768px), (pointer: coarse) {
+  .mobile-action-btn {
+    display: flex;
+  }
+}
+
+.mobile-action-btn.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+.mobile-action-btn:active {
+  background-color: rgba(134, 221, 143, 0.25);
+  transform: scale(0.92);
+}
+
+/* ==========================================================================
+   Controle Virtual Discreto (D-Pad Mobile / Touch)
+   ========================================================================== */
+.touch-dpad {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: none;
+  grid-template-columns: repeat(3, 44px);
+  grid-template-rows: repeat(3, 44px);
+  gap: 2px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0.72;
+  transition: opacity var(--transition-fast);
+}
+
+.touch-dpad:active {
+  opacity: 0.95;
+}
+
+body.is-touch-device .touch-dpad {
+  display: grid;
+}
+
+@media (max-width: 768px), (pointer: coarse) {
+  .touch-dpad {
+    display: grid;
+  }
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .stage {
+    padding-bottom: 164px;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .touch-dpad {
+    left: auto;
+    right: 5.5rem;
+    bottom: var(--space-md);
+    transform: none;
+    grid-template-columns: repeat(3, 38px);
+    grid-template-rows: repeat(3, 38px);
+    opacity: 0.55;
+  }
+
+  .mobile-action-btn {
+    bottom: var(--space-md);
+    right: var(--space-md);
+  }
+}
+
+.touch-dpad__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(43, 42, 42, 0.72);
+  border: 1px solid rgba(185, 185, 185, 0.45);
+  border-radius: 0;
+  cursor: pointer;
+  outline: none;
+  touch-action: none;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.touch-dpad__btn.is-pressed,
+.touch-dpad__btn:active {
+  background-color: rgba(134, 221, 143, 0.18);
+  border-color: var(--accent);
+  transform: scale(0.93);
+}
+
+.touch-dpad__btn--up {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.touch-dpad__btn--left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.touch-dpad__center {
+  grid-column: 2;
+  grid-row: 2;
+  background-color: rgba(43, 42, 42, 0.45);
+  border: 1px solid rgba(185, 185, 185, 0.2);
+}
+
+.touch-dpad__btn--right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.touch-dpad__btn--down {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.touch-dpad__arrow {
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.touch-dpad__btn--up .touch-dpad__arrow {
+  border-width: 0 6px 8px 6px;
+  border-color: transparent transparent var(--text-primary) transparent;
+}
+
+.touch-dpad__btn--down .touch-dpad__arrow {
+  border-width: 8px 6px 0 6px;
+  border-color: var(--text-primary) transparent transparent transparent;
+}
+
+.touch-dpad__btn--left .touch-dpad__arrow {
+  border-width: 6px 8px 6px 0;
+  border-color: transparent var(--text-primary) transparent transparent;
+}
+
+.touch-dpad__btn--right .touch-dpad__arrow {
+  border-width: 6px 0 6px 8px;
+  border-color: transparent transparent transparent var(--text-primary);
+}
+
+/* ==========================================================================
+   Telas Sobrepostas (Modais de Conteúdo)
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  background: rgba(43, 42, 42, 0.85);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity var(--transition-fast),
+    visibility var(--transition-fast);
+}
+
+.modal-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.modal-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 780px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(185, 185, 185, 0.15);
+  transform: scale(0.96);
+  transition: transform var(--transition-fast);
+}
+
+.modal-backdrop.is-open .modal-dialog {
+  transform: scale(1);
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid rgba(185, 185, 185, 0.25);
+}
+
+.modal__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 3.2vw, 2.35rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.modal__close {
+  background: transparent;
+  border: 1px solid transparent;
+  font-family: var(--font-game);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  padding: var(--space-xs) var(--space-sm);
+  cursor: pointer;
+  border-radius: 0;
+  outline: none;
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.modal__close:hover,
+.modal__close:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+  background-color: rgba(134, 221, 143, 0.12);
+}
+
+.modal__body {
+  padding: var(--space-lg);
+  overflow-y: auto;
+  flex: 1 1 auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface) var(--bg-primary);
+}
+
+.modal__body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal__body::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+.modal__body::-webkit-scrollbar-thumb {
+  background: var(--surface);
+  border-radius: 0;
+}
+
+.modal__body::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Modal 1: Grid de Postagens / Vídeos */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: var(--space-md);
+}
+
+.post-card-slot {
+  background-color: rgba(185, 185, 185, 0.04);
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.post-card-slot:hover {
+  border-color: var(--text-primary);
+  background-color: rgba(185, 185, 185, 0.08);
+}
+
+.post-card-slot__media {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: rgba(185, 185, 185, 0.08);
+  border: 1px dashed rgba(185, 185, 185, 0.35);
+}
+
+.post-card-slot__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding-top: var(--space-2xs);
+}
+
+.post-card-slot__line {
+  height: 8px;
+  background-color: rgba(185, 185, 185, 0.2);
+}
+
+.post-card-slot__line--title {
+  width: 70%;
+}
+
+.post-card-slot__line--sub {
+  width: 45%;
+}
+
+/* Modal 2: Lista de Ensaios / Ideias */
+.essays-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.essay-slot {
+  border: 1px solid rgba(185, 185, 185, 0.35);
+  border-radius: 0;
+  padding: var(--space-md);
+  background-color: rgba(185, 185, 185, 0.03);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.essay-slot:hover {
+  border-color: var(--accent);
+  background-color: rgba(134, 221, 143, 0.04);
+}
+
+.essay-slot__link {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+}
+
+.essay-slot__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.essay-slot__title-placeholder {
+  display: block;
+  height: 18px;
+  width: 55%;
+  background-color: rgba(185, 185, 185, 0.25);
+}
+
+.essay-slot__arrow {
+  font-family: var(--font-game);
+  font-size: 0.75rem;
+  color: var(--surface);
+  transition: color var(--transition-fast);
+}
+
+.essay-slot:hover .essay-slot__arrow {
+  color: var(--accent);
+}
+
+.essay-slot__meta-placeholder {
+  height: 10px;
+  width: 35%;
+  margin-top: var(--space-xs);
+  background-color: rgba(185, 185, 185, 0.12);
+}
+
+/* ==========================================================================
+   Tela de Carregamento (Loading Screen)
+   ========================================================================== */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-primary);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--transition-fade), visibility var(--transition-fade);
+}
+
+.loading-screen.is-fading-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-screen__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+.loading-screen__label {
+  font-family: var(--font-game);
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--text-primary);
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  user-select: none;
+}
+
+.loading-screen__bar {
+  width: min(200px, 65vw);
+  height: 12px;
+  padding: 2px;
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  background-color: transparent;
+}
+
+.loading-screen__fill {
+  width: 0%;
+  height: 100%;
+  background-color: var(--text-primary);
+  border-radius: 0;
+  transition: width var(--transition-progress);
+}
+
+/* ==========================================================================
+   Template de Leitura dos Ensaios (/ensaios/*.html)
+   ========================================================================== */
+html:has(body.essay-page),
+body.essay-page {
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+body.essay-page {
+  display: block;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 3.5rem 1.5rem 6rem;
+}
+
+.essay-container {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.essay-header {
+  margin-bottom: var(--space-xl);
+}
+
+.essay-nav {
+  margin-bottom: var(--space-lg);
+}
+
+.essay-back-link {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-game);
+  font-size: 0.6875rem;
+  color: var(--surface);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color var(--transition-fast);
+}
+
+.essay-back-link:hover,
+.essay-back-link:focus-visible {
+  color: var(--accent);
+}
+
+.essay-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-sm);
+  min-height: 1.2rem;
+}
+
+.essay-meta span:empty {
+  display: none;
+}
+
+.essay-meta__separator {
+  color: var(--surface);
+  opacity: 0.6;
+}
+
+.essay-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-top: 0.35rem;
+  min-height: 2.5rem;
+}
+
+.essay-content {
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  line-height: 1.78;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+.essay-paragraph {
+  margin-bottom: 1.5rem;
+}
+
+.essay-paragraph:empty {
+  display: none;
+}
+
+.essay-content a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity var(--transition-fast);
+}
+
+.essay-content a:hover,
+.essay-content a:focus-visible {
+  opacity: 0.85;
+}
+
+.essay-subtitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.essay-subtitle:empty {
+  display: none;
+}
+
+.essay-footer {
+  margin-top: 4rem;
+}
+
+.essay-divider {
+  border: none;
+  border-top: 1px solid var(--surface);
+  opacity: 0.4;
+  margin-bottom: var(--space-lg);
+}
+
+.essay-signature {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.essay-author {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
+.essay-footer-back {
+  font-family: var(--font-game);
+  font-size: 0.625rem;
+  color: var(--surface);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color var(--transition-fast);
+}
+
+.essay-footer-back:hover,
+.essay-footer-back:focus-visible {
+  color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  body.essay-page {
+    padding: 2rem 1rem 4rem;
+  }
+
+  .essay-signature {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-screen,
+  .loading-screen__fill,
+  .touch-dpad__btn,
+  .mobile-action-btn,
+  .interaction-hud,
+  .modal-dialog,
+  .modal-backdrop {
+    transition-duration: 0.01ms;
+  }
+}

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#2b2a2a">
+  <title>Erich Moura — Direção, Música e Ensaios</title>
+  <meta name="description" content="Site pessoal de Erich Moura. Direção, música, projetos e ensaios em formato interativo.">
+
+  <!-- Metatags Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://erichmoura.com/">
+  <meta property="og:title" content="Erich Moura — Direção, Música e Ensaios">
+  <meta property="og:description" content="Site pessoal de Erich Moura. Direção, música, projetos e ensaios em formato interativo.">
+
+  <!-- Metatags Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Erich Moura — Direção, Música e Ensaios">
+  <meta name="twitter:description" content="Site pessoal de Erich Moura. Direção, música, projetos e ensaios em formato interativo.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+  <div id="loadingScreen" class="loading-screen" aria-live="polite" aria-busy="true">
+    <div class="loading-screen__content">
+      <p class="loading-screen__label">loading..</p>
+      <div
+        id="loadingProgressBar"
+        class="loading-screen__bar"
+        role="progressbar"
+        aria-label="loading.."
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+      >
+        <div id="loadingBarFill" class="loading-screen__fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <main class="stage">
+    <!-- Menu Alternativo de Acessibilidade / Acesso Rápido -->
+    <nav id="quickNav" class="quick-nav" aria-label="Navegação direta">
+      <button type="button" class="quick-nav__btn" data-open-modal="modalPosts" aria-label="Abrir Minhas Postagens">
+        [ Postagens ]
+      </button>
+      <button type="button" class="quick-nav__btn" data-open-modal="modalIdeas" aria-label="Abrir Minhas Ideias">
+        [ Ideias ]
+      </button>
+    </nav>
+
+    <div class="game-frame">
+      <canvas id="gameCanvas" width="272" height="176"></canvas>
+
+      <!-- HUD de Interação (Desktop) -->
+      <div id="interactionHud" class="interaction-hud" aria-live="polite">
+        <span class="interaction-hud__badge">[ E ]</span>
+        <span class="interaction-hud__text">Interagir</span>
+      </div>
+    </div>
+
+    <!-- Botão de Ação Flutuante (Mobile) -->
+    <button type="button" id="mobileActionBtn" class="mobile-action-btn" aria-label="Interagir">
+      <span class="mobile-action-btn__label" aria-hidden="true">E</span>
+    </button>
+
+    <nav id="touchDpad" class="touch-dpad" aria-label="Controles direcionais">
+      <button type="button" class="touch-dpad__btn touch-dpad__btn--up" data-dir="up" aria-label="Mover para cima">
+        <span class="touch-dpad__arrow" aria-hidden="true"></span>
+      </button>
+      <button type="button" class="touch-dpad__btn touch-dpad__btn--left" data-dir="left" aria-label="Mover para esquerda">
+        <span class="touch-dpad__arrow" aria-hidden="true"></span>
+      </button>
+      <span class="touch-dpad__center" aria-hidden="true"></span>
+      <button type="button" class="touch-dpad__btn touch-dpad__btn--right" data-dir="right" aria-label="Mover para direita">
+        <span class="touch-dpad__arrow" aria-hidden="true"></span>
+      </button>
+      <button type="button" class="touch-dpad__btn touch-dpad__btn--down" data-dir="down" aria-label="Mover para baixo">
+        <span class="touch-dpad__arrow" aria-hidden="true"></span>
+      </button>
+    </nav>
+  </main>
+
+  <!-- Modal 1: Sala da Esquerda ("Minhas Postagens") -->
+  <div id="modalPosts" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalPostsTitle">
+    <div class="modal-dialog">
+      <header class="modal__header">
+        <h2 id="modalPostsTitle" class="modal__title">Minhas Postagens</h2>
+        <button type="button" class="modal__close" data-close-modal aria-label="Fechar modal">[ X ]</button>
+      </header>
+      <div class="modal__body">
+        <div class="posts-grid">
+          <article class="post-card-slot">
+            <div class="post-card-slot__media"></div>
+            <div class="post-card-slot__info">
+              <div class="post-card-slot__line post-card-slot__line--title"></div>
+              <div class="post-card-slot__line post-card-slot__line--sub"></div>
+            </div>
+          </article>
+          <article class="post-card-slot">
+            <div class="post-card-slot__media"></div>
+            <div class="post-card-slot__info">
+              <div class="post-card-slot__line post-card-slot__line--title"></div>
+              <div class="post-card-slot__line post-card-slot__line--sub"></div>
+            </div>
+          </article>
+          <article class="post-card-slot">
+            <div class="post-card-slot__media"></div>
+            <div class="post-card-slot__info">
+              <div class="post-card-slot__line post-card-slot__line--title"></div>
+              <div class="post-card-slot__line post-card-slot__line--sub"></div>
+            </div>
+          </article>
+          <article class="post-card-slot">
+            <div class="post-card-slot__media"></div>
+            <div class="post-card-slot__info">
+              <div class="post-card-slot__line post-card-slot__line--title"></div>
+              <div class="post-card-slot__line post-card-slot__line--sub"></div>
+            </div>
+          </article>
+          <article class="post-card-slot">
+            <div class="post-card-slot__media"></div>
+            <div class="post-card-slot__info">
+              <div class="post-card-slot__line post-card-slot__line--title"></div>
+              <div class="post-card-slot__line post-card-slot__line--sub"></div>
+            </div>
+          </article>
+          <article class="post-card-slot">
+            <div class="post-card-slot__media"></div>
+            <div class="post-card-slot__info">
+              <div class="post-card-slot__line post-card-slot__line--title"></div>
+              <div class="post-card-slot__line post-card-slot__line--sub"></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Sala da Direita ("Minhas Ideias" / Artigos) -->
+  <div id="modalIdeas" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalIdeasTitle">
+    <div class="modal-dialog">
+      <header class="modal__header">
+        <h2 id="modalIdeasTitle" class="modal__title">Minhas Ideias</h2>
+        <button type="button" class="modal__close" data-close-modal aria-label="Fechar modal">[ X ]</button>
+      </header>
+      <div class="modal__body">
+        <ul class="essays-list">
+          <li class="essay-slot">
+            <a href="./ensaios/template.html" class="essay-slot__link" title="Abrir ensaio">
+              <div class="essay-slot__header">
+                <span class="essay-slot__title-placeholder"></span>
+                <span class="essay-slot__arrow">&rarr;</span>
+              </div>
+              <div class="essay-slot__meta-placeholder"></div>
+            </a>
+          </li>
+          <li class="essay-slot">
+            <div class="essay-slot__link">
+              <div class="essay-slot__header">
+                <span class="essay-slot__title-placeholder"></span>
+                <span class="essay-slot__arrow">&rarr;</span>
+              </div>
+              <div class="essay-slot__meta-placeholder"></div>
+            </div>
+          </li>
+          <li class="essay-slot">
+            <div class="essay-slot__link">
+              <div class="essay-slot__header">
+                <span class="essay-slot__title-placeholder"></span>
+                <span class="essay-slot__arrow">&rarr;</span>
+              </div>
+              <div class="essay-slot__meta-placeholder"></div>
+            </div>
+          </li>
+          <li class="essay-slot">
+            <div class="essay-slot__link">
+              <div class="essay-slot__header">
+                <span class="essay-slot__title-placeholder"></span>
+                <span class="essay-slot__arrow">&rarr;</span>
+              </div>
+              <div class="essay-slot__meta-placeholder"></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="./assets/js/main.js" defer></script>
+</body>
+</html>
