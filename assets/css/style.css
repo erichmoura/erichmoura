@@ -172,6 +172,55 @@ body {
 }
 
 /* ==========================================================================
+   Indicador de Localização da Sala (Hall, Ideias, Musical, Cinema)
+   ========================================================================== */
+.room-location-badge {
+  position: absolute;
+  bottom: 0.85rem;
+  left: 0.85rem;
+  z-index: 55;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.65rem;
+  background-color: rgba(43, 42, 42, 0.92);
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  color: var(--text-primary);
+  font-family: var(--font-game);
+  font-size: 0.5625rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.room-location-badge__icon {
+  color: var(--accent);
+  font-size: 0.5rem;
+  line-height: 1;
+}
+
+.room-location-badge__text {
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .room-location-badge {
+    bottom: 0.55rem;
+    left: 0.55rem;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.5rem;
+  }
+}
+
+/* ==========================================================================
    HUD de Interação (Desktop) & Botão de Ação (Mobile)
    ========================================================================== */
 .interaction-hud {
@@ -472,6 +521,20 @@ body.is-touch-device .touch-dpad {
   border-bottom: 1px solid rgba(185, 185, 185, 0.25);
 }
 
+.modal__title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.modal__tag {
+  font-family: var(--font-game);
+  font-size: 0.5625rem;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
 .modal__title {
   font-family: var(--font-heading);
   font-size: clamp(1.75rem, 3.2vw, 2.35rem);
@@ -582,6 +645,250 @@ body.is-touch-device .touch-dpad {
 }
 
 /* Modal 2: Lista de Ensaios / Ideias */
+.essays-filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid rgba(185, 185, 185, 0.2);
+}
+
+.essays-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.essays-search-icon {
+  position: absolute;
+  left: 0.85rem;
+  color: var(--surface);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.essays-search-input {
+  width: 100%;
+  padding: 0.65rem 2.2rem 0.65rem 2.4rem;
+  background-color: rgba(43, 42, 42, 0.7);
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  outline: none;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.essays-search-input:focus {
+  border-color: var(--accent);
+  background-color: rgba(43, 42, 42, 0.95);
+}
+
+.essays-search-clear {
+  position: absolute;
+  right: 0.6rem;
+  background: transparent;
+  border: none;
+  color: var(--surface);
+  font-family: var(--font-game);
+  font-size: 0.65rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+}
+
+.essays-search-clear:hover {
+  color: var(--accent);
+}
+
+.essays-filters-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.essays-filter-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.essays-filter-label {
+  font-family: var(--font-game);
+  font-size: 0.5625rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.essays-filter-select {
+  padding: 0.45rem 0.65rem;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.essays-filter-select:focus {
+  border-color: var(--accent);
+}
+
+.essays-filter-item--date {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  width: 100%;
+  padding-top: var(--space-xs);
+  border-top: 1px dashed rgba(185, 185, 185, 0.15);
+}
+
+.essays-date-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.essays-date-mode-toggle {
+  display: flex;
+  gap: 4px;
+}
+
+.essays-date-mode-btn {
+  font-family: var(--font-game);
+  font-size: 0.5rem;
+  color: var(--text-secondary);
+  background-color: var(--bg-primary);
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: all var(--transition-fast);
+}
+
+.essays-date-mode-btn:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.essays-date-mode-btn.is-active {
+  background-color: var(--surface);
+  color: var(--bg-primary);
+  border-color: var(--accent);
+  font-weight: bold;
+}
+
+.essays-date-inputs-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.essays-date-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.essays-date-field__label {
+  font-family: var(--font-game);
+  font-size: 0.5625rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.essays-date-input {
+  padding: 0.4rem 0.6rem;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  outline: none;
+  transition: border-color var(--transition-fast);
+  color-scheme: dark;
+}
+
+.essays-date-input:focus {
+  border-color: var(--accent);
+}
+
+.essays-date-clear-btn {
+  font-family: var(--font-game);
+  font-size: 0.5625rem;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 0.35rem 0.5rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.essays-date-clear-btn:hover {
+  border-color: var(--accent);
+  background-color: rgba(134, 221, 143, 0.1);
+}
+
+/* Modal 0: Biografia no Hall de Entrada */
+.bio-modal {
+  padding: var(--space-xl) var(--space-md);
+  border: 1px solid rgba(185, 185, 185, 0.25);
+  background-color: rgba(43, 42, 42, 0.6);
+  text-align: center;
+}
+
+.bio-modal__badge {
+  display: inline-block;
+  font-family: var(--font-game);
+  font-size: 0.625rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-md);
+}
+
+.bio-modal__lead {
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  line-height: 1.4;
+  color: var(--text-primary);
+  font-style: italic;
+  margin: 0;
+}
+
+.essay-slot__badge {
+  display: inline-block;
+  font-family: var(--font-game);
+  font-size: 0.5625rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+.essays-empty-state {
+  padding: var(--space-xl) var(--space-md);
+  text-align: center;
+}
+
+.essays-empty-state__text {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
 .essays-list {
   list-style: none;
   margin: 0;
@@ -641,6 +948,231 @@ body.is-touch-device .touch-dpad {
   width: 35%;
   margin-top: var(--space-xs);
   background-color: rgba(185, 185, 185, 0.12);
+}
+
+/* Modal 3: Grid da Sala de Cinema */
+.cinema-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-md);
+}
+
+.cinema-card-slot {
+  background-color: rgba(185, 185, 185, 0.04);
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.cinema-card-slot:hover {
+  border-color: var(--accent);
+  background-color: rgba(134, 221, 143, 0.05);
+}
+
+.cinema-card-slot__screen {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(185, 185, 185, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--surface);
+  font-size: 1.125rem;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.cinema-card-slot:hover .cinema-card-slot__screen {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.cinema-card-slot__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding-top: var(--space-2xs);
+}
+
+.cinema-card-slot__line {
+  height: 8px;
+  background-color: rgba(185, 185, 185, 0.2);
+}
+
+.cinema-card-slot__line--title {
+  width: 75%;
+}
+
+.cinema-card-slot__line--sub {
+  width: 50%;
+}
+
+/* Modal 4: Boas-Vindas */
+.modal-dialog--welcome {
+  max-width: 540px;
+}
+
+.modal__body--welcome {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+}
+
+.welcome-text {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.welcome-hint {
+  font-family: var(--font-game);
+  font-size: 0.625rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding-top: var(--space-xs);
+  border-top: 1px solid rgba(185, 185, 185, 0.15);
+}
+
+.welcome-footer {
+  justify-content: flex-end;
+}
+
+/* Modal 5: Diálogo com Erich NPC */
+.modal-dialog--dialogue {
+  max-width: 580px;
+}
+
+.dialogue-speaker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.dialogue-speaker__role {
+  font-family: var(--font-game);
+  font-size: 0.5625rem;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.dialogue-speaker__subtitle {
+  font-family: var(--font-game);
+  font-size: 0.5625rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.modal__body--dialogue {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+}
+
+.dialogue-avatar {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.dialogue-avatar__canvas {
+  width: 64px;
+  height: 64px;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+.dialogue-balloon {
+  flex: 1 1 auto;
+  background-color: rgba(185, 185, 185, 0.04);
+  border: 1px solid rgba(185, 185, 185, 0.25);
+  padding: var(--space-md);
+}
+
+.dialogue-balloon__text {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.dialogue-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+/* Botões de Ação dentro de Modais */
+.modal__footer {
+  display: flex;
+  align-items: center;
+  padding: var(--space-md) var(--space-lg);
+  border-top: 1px solid rgba(185, 185, 185, 0.2);
+}
+
+.modal-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 0.95rem;
+  background-color: transparent;
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  color: var(--text-primary);
+  font-family: var(--font-game);
+  font-size: 0.65rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.modal-action-btn:hover,
+.modal-action-btn:focus-visible {
+  border-color: var(--text-primary);
+  background-color: rgba(250, 250, 250, 0.08);
+}
+
+.modal-action-btn--accent {
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: rgba(134, 221, 143, 0.08);
+}
+
+.modal-action-btn--accent:hover,
+.modal-action-btn--accent:focus-visible {
+  border-color: var(--accent);
+  background-color: rgba(134, 221, 143, 0.22);
+  color: var(--text-primary);
+}
+
+@media (max-width: 600px) {
+  .modal__body--dialogue {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 }
 
 /* ==========================================================================

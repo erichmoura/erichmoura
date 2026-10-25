@@ -43,10 +43,13 @@
   <main class="stage">
     <!-- Menu Alternativo de Acessibilidade / Acesso Rápido -->
     <nav id="quickNav" class="quick-nav" aria-label="Navegação direta">
-      <button type="button" class="quick-nav__btn" data-open-modal="modalPosts" aria-label="Abrir Minhas Postagens">
-        [ Postagens ]
+      <button type="button" class="quick-nav__btn" data-open-modal="modalPosts" aria-label="Abrir Sala Musical">
+        [ Música ]
       </button>
-      <button type="button" class="quick-nav__btn" data-open-modal="modalIdeas" aria-label="Abrir Minhas Ideias">
+      <button type="button" class="quick-nav__btn" data-open-modal="modalCinema" aria-label="Abrir Sala de Cinema">
+        [ Cinema ]
+      </button>
+      <button type="button" class="quick-nav__btn" data-open-modal="modalIdeas" aria-label="Abrir Sala das Ideias">
         [ Ideias ]
       </button>
     </nav>
@@ -54,10 +57,16 @@
     <div class="game-frame">
       <canvas id="gameCanvas" width="272" height="176"></canvas>
 
+      <!-- Indicador de Localização da Sala -->
+      <div id="roomLocationBadge" class="room-location-badge" aria-live="polite">
+        <span class="room-location-badge__icon" aria-hidden="true">&#9670;</span>
+        <span id="roomLocationText" class="room-location-badge__text">Hall de entrada</span>
+      </div>
+
       <!-- HUD de Interação (Desktop) -->
       <div id="interactionHud" class="interaction-hud" aria-live="polite">
         <span class="interaction-hud__badge">[ E ]</span>
-        <span class="interaction-hud__text">Interagir</span>
+        <span id="interactionHudText" class="interaction-hud__text">Interagir</span>
       </div>
     </div>
 
@@ -83,11 +92,33 @@
     </nav>
   </main>
 
-  <!-- Modal 1: Sala da Esquerda ("Minhas Postagens") -->
+  <!-- Modal 0: Hall de Entrada ("Quem é Erich Moura?") -->
+  <div id="modalBio" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalBioTitle">
+    <div class="modal-dialog">
+      <header class="modal__header">
+        <div class="modal__title-group">
+          <span class="modal__tag">[ HALL DE ENTRADA ]</span>
+          <h2 id="modalBioTitle" class="modal__title">Quem é Erich Moura?</h2>
+        </div>
+        <button type="button" class="modal__close" data-close-modal aria-label="Fechar modal">[ X ]</button>
+      </header>
+      <div class="modal__body">
+        <div class="bio-modal">
+          <span class="bio-modal__badge">&bull; BIOGRAFIA &amp; ORIGEM &bull;</span>
+          <p class="bio-modal__lead">Nasceu em 1998 e o resto eu já conto...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 1: Sala da Esquerda ("Sala Musical") -->
   <div id="modalPosts" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalPostsTitle">
     <div class="modal-dialog">
       <header class="modal__header">
-        <h2 id="modalPostsTitle" class="modal__title">Minhas Postagens</h2>
+        <div class="modal__title-group">
+          <span class="modal__tag">[ SALA MUSICAL ]</span>
+          <h2 id="modalPostsTitle" class="modal__title">Produções & Músicas</h2>
+        </div>
         <button type="button" class="modal__close" data-close-modal aria-label="Fechar modal">[ X ]</button>
       </header>
       <div class="modal__body">
@@ -139,53 +170,234 @@
     </div>
   </div>
 
-  <!-- Modal 2: Sala da Direita ("Minhas Ideias" / Artigos) -->
+  <!-- Modal 2: Sala da Direita ("Sala das Ideias" / Artigos) -->
   <div id="modalIdeas" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalIdeasTitle">
     <div class="modal-dialog">
       <header class="modal__header">
-        <h2 id="modalIdeasTitle" class="modal__title">Minhas Ideias</h2>
+        <div class="modal__title-group">
+          <span class="modal__tag">[ SALA DAS IDEIAS ]</span>
+          <h2 id="modalIdeasTitle" class="modal__title">Ensaios & Artigos</h2>
+        </div>
         <button type="button" class="modal__close" data-close-modal aria-label="Fechar modal">[ X ]</button>
       </header>
       <div class="modal__body">
-        <ul class="essays-list">
-          <li class="essay-slot">
+        <!-- Barra de Busca e Filtros dos Ensaios -->
+        <div class="essays-filter-bar">
+          <div class="essays-search-box">
+            <span class="essays-search-icon" aria-hidden="true">&#9906;</span>
+            <input
+              type="text"
+              id="essaySearchInput"
+              class="essays-search-input"
+              placeholder="Buscar ensaio por título ou palavra-chave..."
+              aria-label="Buscar ensaios"
+            >
+            <button type="button" id="essaySearchClearBtn" class="essays-search-clear" aria-label="Limpar busca" style="display: none;">[ &times; ]</button>
+          </div>
+
+          <div class="essays-filters-group">
+            <div class="essays-filter-item">
+              <label for="essayCategoryFilter" class="essays-filter-label">Modalidade:</label>
+              <select id="essayCategoryFilter" class="essays-filter-select">
+                <option value="all">Todas as modalidades</option>
+                <option value="filosofia">Filosofia & Pensamento</option>
+                <option value="cinema">Cinema & Narrativa</option>
+                <option value="aprendizados">Aprendizados & Vida</option>
+                <option value="musica">Música & Percepção</option>
+              </select>
+            </div>
+
+            <div class="essays-filter-item essays-filter-item--date">
+              <div class="essays-date-header">
+                <span class="essays-filter-label">Filtro de Data:</span>
+                <div class="essays-date-mode-toggle" role="radiogroup" aria-label="Modo de filtro de data">
+                  <button type="button" id="essayDateModeRangeBtn" class="essays-date-mode-btn is-active" data-date-mode="range">Período (Range)</button>
+                  <button type="button" id="essayDateModeSingleBtn" class="essays-date-mode-btn" data-date-mode="single">Dia Único</button>
+                </div>
+              </div>
+
+              <div class="essays-date-inputs-wrapper">
+                <div class="essays-date-field" id="essayDateFieldStart">
+                  <label for="essayDateStart" class="essays-date-field__label">De:</label>
+                  <input type="date" id="essayDateStart" class="essays-date-input" aria-label="Data inicial" />
+                </div>
+
+                <div class="essays-date-field" id="essayDateFieldEnd">
+                  <label for="essayDateEnd" class="essays-date-field__label">Até:</label>
+                  <input type="date" id="essayDateEnd" class="essays-date-input" aria-label="Data final" />
+                </div>
+
+                <div class="essays-date-field" id="essayDateFieldSingle" style="display: none;">
+                  <label for="essayDateSingle" class="essays-date-field__label">Dia:</label>
+                  <input type="date" id="essayDateSingle" class="essays-date-input" aria-label="Dia específico" />
+                </div>
+
+                <button type="button" id="essayDateClearBtn" class="essays-date-clear-btn" title="Limpar filtro de data">[ Limpar Data ]</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ul id="essaysList" class="essays-list">
+          <li class="essay-slot" data-title="Template de Ensaio" data-category="filosofia" data-date="2026-03-15" data-search="template ensaio reflexao filosofia pensamentos aprendizados 15/03/2026 2026-03-15">
             <a href="./ensaios/template.html" class="essay-slot__link" title="Abrir ensaio">
               <div class="essay-slot__header">
                 <span class="essay-slot__title-placeholder"></span>
                 <span class="essay-slot__arrow">&rarr;</span>
               </div>
-              <div class="essay-slot__meta-placeholder"></div>
+              <div class="essay-slot__meta-placeholder">
+                <span class="essay-slot__badge">15/03/2026 &bull; Filosofia &amp; Pensamento</span>
+              </div>
             </a>
           </li>
-          <li class="essay-slot">
+          <li class="essay-slot" data-title="Cinema e Narrativa" data-category="cinema" data-date="2026-01-20" data-search="cinema direcao narrativa visual filmes 20/01/2026 2026-01-20">
             <div class="essay-slot__link">
               <div class="essay-slot__header">
                 <span class="essay-slot__title-placeholder"></span>
                 <span class="essay-slot__arrow">&rarr;</span>
               </div>
-              <div class="essay-slot__meta-placeholder"></div>
+              <div class="essay-slot__meta-placeholder">
+                <span class="essay-slot__badge">20/01/2026 &bull; Cinema &amp; Narrativa</span>
+              </div>
             </div>
           </li>
-          <li class="essay-slot">
+          <li class="essay-slot" data-title="Aprendizados e Vida" data-category="aprendizados" data-date="2025-11-04" data-search="aprendizados vida tempo escolhas reflexoes 04/11/2025 2025-11-04">
             <div class="essay-slot__link">
               <div class="essay-slot__header">
                 <span class="essay-slot__title-placeholder"></span>
                 <span class="essay-slot__arrow">&rarr;</span>
               </div>
-              <div class="essay-slot__meta-placeholder"></div>
+              <div class="essay-slot__meta-placeholder">
+                <span class="essay-slot__badge">04/11/2025 &bull; Aprendizados &amp; Vida</span>
+              </div>
             </div>
           </li>
-          <li class="essay-slot">
+          <li class="essay-slot" data-title="Música e Percepção" data-category="musica" data-date="2024-08-19" data-search="musica trilhas som percepcao criacao 19/08/2024 2024-08-19">
             <div class="essay-slot__link">
               <div class="essay-slot__header">
                 <span class="essay-slot__title-placeholder"></span>
                 <span class="essay-slot__arrow">&rarr;</span>
               </div>
-              <div class="essay-slot__meta-placeholder"></div>
+              <div class="essay-slot__meta-placeholder">
+                <span class="essay-slot__badge">19/08/2024 &bull; Música &amp; Percepção</span>
+              </div>
             </div>
           </li>
         </ul>
+
+        <div id="essaysEmptyState" class="essays-empty-state" style="display: none;">
+          <p class="essays-empty-state__text">Nenhum ensaio encontrado para os filtros selecionados.</p>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Sala de Cima ("Sala de Cinema") -->
+  <div id="modalCinema" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalCinemaTitle">
+    <div class="modal-dialog">
+      <header class="modal__header">
+        <div class="modal__title-group">
+          <span class="modal__tag">[ SALA DE CINEMA ]</span>
+          <h2 id="modalCinemaTitle" class="modal__title">Direção & Audiovisual</h2>
+        </div>
+        <button type="button" class="modal__close" data-close-modal aria-label="Fechar modal">[ X ]</button>
+      </header>
+      <div class="modal__body">
+        <div class="cinema-grid">
+          <article class="cinema-card-slot">
+            <div class="cinema-card-slot__screen">
+              <span class="cinema-card-slot__play-icon">&#9654;</span>
+            </div>
+            <div class="cinema-card-slot__info">
+              <div class="cinema-card-slot__line cinema-card-slot__line--title"></div>
+              <div class="cinema-card-slot__line cinema-card-slot__line--sub"></div>
+            </div>
+          </article>
+          <article class="cinema-card-slot">
+            <div class="cinema-card-slot__screen">
+              <span class="cinema-card-slot__play-icon">&#9654;</span>
+            </div>
+            <div class="cinema-card-slot__info">
+              <div class="cinema-card-slot__line cinema-card-slot__line--title"></div>
+              <div class="cinema-card-slot__line cinema-card-slot__line--sub"></div>
+            </div>
+          </article>
+          <article class="cinema-card-slot">
+            <div class="cinema-card-slot__screen">
+              <span class="cinema-card-slot__play-icon">&#9654;</span>
+            </div>
+            <div class="cinema-card-slot__info">
+              <div class="cinema-card-slot__line cinema-card-slot__line--title"></div>
+              <div class="cinema-card-slot__line cinema-card-slot__line--sub"></div>
+            </div>
+          </article>
+          <article class="cinema-card-slot">
+            <div class="cinema-card-slot__screen">
+              <span class="cinema-card-slot__play-icon">&#9654;</span>
+            </div>
+            <div class="cinema-card-slot__info">
+              <div class="cinema-card-slot__line cinema-card-slot__line--title"></div>
+              <div class="cinema-card-slot__line cinema-card-slot__line--sub"></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Boas-Vindas (Primeira Visita no Navegador) -->
+  <div id="modalWelcome" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalWelcomeTitle">
+    <div class="modal-dialog modal-dialog--welcome">
+      <header class="modal__header">
+        <div class="modal__title-group">
+          <span class="modal__tag">[ BEM-VINDO ]</span>
+          <h2 id="modalWelcomeTitle" class="modal__title">Erich Moura</h2>
+        </div>
+        <button type="button" class="modal__close" data-close-modal aria-label="Fechar boas-vindas">[ X ]</button>
+      </header>
+      <div class="modal__body modal__body--welcome">
+        <p class="welcome-text">
+          Olá, seja bem-vindo ao meu mundo! Aqui você poderá explorar um pouco do que já fiz em minha vida e o que penso sobre as coisas, sinta-se em casa
+        </p>
+        <div class="welcome-hint">
+          <span>&bull; Use WASD ou toque na tela para explorar os cômodos</span>
+        </div>
+      </div>
+      <footer class="modal__footer welcome-footer">
+        <button type="button" id="welcomeStartBtn" class="modal-action-btn modal-action-btn--accent" data-close-modal>
+          [ Explorar o Mundo ]
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Modal 5: Diálogo Interativo com Erich NPC -->
+  <div id="modalDialogue" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalDialogueSpeaker">
+    <div class="modal-dialog modal-dialog--dialogue">
+      <header class="modal__header">
+        <div class="dialogue-speaker">
+          <span id="modalDialogueRole" class="dialogue-speaker__role">[ DIRETOR & CRIADOR ]</span>
+          <h2 id="modalDialogueSpeaker" class="modal__title">Erich Moura</h2>
+          <span id="modalDialogueSubtitle" class="dialogue-speaker__subtitle" style="display: none;"></span>
+        </div>
+        <button type="button" class="modal__close" data-close-modal aria-label="Fechar diálogo">[ X ]</button>
+      </header>
+      <div class="modal__body modal__body--dialogue">
+        <div class="dialogue-avatar">
+          <canvas id="dialogueAvatarCanvas" width="32" height="32" class="dialogue-avatar__canvas"></canvas>
+        </div>
+        <div class="dialogue-balloon">
+          <p id="modalDialogueText" class="dialogue-balloon__text"></p>
+        </div>
+      </div>
+      <footer class="modal__footer dialogue-footer">
+        <button type="button" id="modalDialogueActionBtn" class="modal-action-btn modal-action-btn--accent" style="display: none;">
+          [ Abrir Conteúdo ]
+        </button>
+        <button type="button" class="modal-action-btn" data-close-modal>
+          [ Continuar ]
+        </button>
+      </footer>
     </div>
   </div>
 
