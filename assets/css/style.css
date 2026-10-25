@@ -108,7 +108,7 @@ body {
 }
 
 /* ==========================================================================
-   Menu Alternativo de Acessibilidade / Acesso Rápido (Mobile & Desktop)
+   Menu Superior: Acesso Rápido às Salas e Redes Sociais (Mobile & Desktop)
    ========================================================================== */
 .quick-nav {
   position: fixed;
@@ -118,6 +118,25 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.quick-nav__rooms {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.quick-nav__divider {
+  width: 1px;
+  height: 18px;
+  background-color: rgba(185, 185, 185, 0.35);
+  margin: 0 0.15rem;
+}
+
+.quick-nav__socials {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .quick-nav__btn {
@@ -158,6 +177,45 @@ body {
   transform: translateY(1px);
 }
 
+.quick-nav__social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 29px;
+  height: 29px;
+  background-color: rgba(43, 42, 42, 0.88);
+  border: 1px solid var(--surface);
+  border-radius: 0;
+  color: var(--text-primary);
+  text-decoration: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.quick-nav__social-link:hover,
+.quick-nav__social-link:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: rgba(43, 42, 42, 0.98);
+  transform: translateY(-1px);
+}
+
+.quick-nav__social-link:active {
+  transform: translateY(1px);
+}
+
+.quick-nav__social-link svg {
+  display: block;
+}
+
 @media (max-width: 768px) {
   .quick-nav {
     top: 0.75rem;
@@ -165,9 +223,32 @@ body {
     gap: 0.35rem;
   }
 
+  .quick-nav__rooms {
+    gap: 0.3rem;
+  }
+
   .quick-nav__btn {
     font-size: 0.5625rem;
     padding: 0.4rem 0.5rem;
+  }
+
+  .quick-nav__divider {
+    height: 14px;
+    margin: 0 0.05rem;
+  }
+
+  .quick-nav__socials {
+    gap: 0.3rem;
+  }
+
+  .quick-nav__social-link {
+    width: 26px;
+    height: 26px;
+  }
+
+  .quick-nav__social-link svg {
+    width: 12px;
+    height: 12px;
   }
 }
 

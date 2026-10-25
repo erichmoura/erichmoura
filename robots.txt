@@ -1,0 +1,30 @@
+# robots.txt para https://erichmoura.com/
+# Permissões completas para motores de busca e motores de inteligência artificial (GEO / AEO)
+
+User-agent: *
+Allow: /
+
+# Rastreadores de IA generativa e assistentes (ChatGPT, Perplexity, Claude, Gemini, Apple)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Sitemap oficial
+Sitemap: https://erichmoura.com/sitemap.xml
